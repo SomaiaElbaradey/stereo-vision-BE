@@ -14,7 +14,6 @@ This repository contains the backend service for a stereo vision application. Bu
   * [API Endpoints](#api-endpoints)
 * [Modules Overview](#modules-overview)
 * [Requirements](#requirements)
-* [License](#license)
 
 ## Features
 
@@ -227,12 +226,7 @@ See `requirements.txt` for exact versions. Key dependencies:
 * `fastapi`, `uvicorn`: Web framework and ASGI server
 * `opencv-python-headless`, `numpy`, `matplotlib`: Computer vision and plotting
 * `open3d`: Point cloud processing
-* python-multipart
-* flask
-* cv2
-* base64
-* json
-* io
+
 
 
 

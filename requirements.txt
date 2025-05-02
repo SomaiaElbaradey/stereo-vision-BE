@@ -6,3 +6,8 @@ numpy
 matplotlib
 flask
 open3d
+cv2
+base64
+flask
+json
+io

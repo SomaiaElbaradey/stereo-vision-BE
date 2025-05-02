@@ -1,4 +1,3 @@
-from flask import Flask
 import cv2
 
 def feature_detection_and_matching(left_img, right_img):

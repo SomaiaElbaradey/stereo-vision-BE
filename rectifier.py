@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 
 def rectificate_images(left_img, right_img, K, dist, R, T):
     h, w = left_img.shape[:2]

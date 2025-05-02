@@ -1,7 +1,6 @@
 import numpy as np
 import open3d as o3d
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 def validate_input(points, colors=None):
     """Ultra-robust input validation"""

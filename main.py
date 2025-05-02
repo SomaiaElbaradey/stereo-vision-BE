@@ -1,4 +1,5 @@
 import json
+from typing import List
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from flask import jsonify, request
@@ -64,19 +65,38 @@ def encode_image_to_base64(img):
 async def rectify_images(
     left: UploadFile = File(...),
     right: UploadFile = File(...),
+    K: List[float] = Form(
+        ..., 
+        description="Intrinsic matrix as 9 floats in row-major order"
+    ),
+    dist: List[float] = Form(
+        ..., 
+        description="Distortion coefficients as a list of floats"
+    ),
 ):
-    # Load calibration parameters (from previous calibration)
-    data = np.load("camera_calibration.npz", allow_pickle=True)
-    K = data["K"]
-    dist = data["dist"]
-    # For demo purposes, R and T are identity and small baseline; ideally, load yours
+    # --- parse & validate calibration params ---
+    try:
+        K_mat = np.array(K, dtype=float).reshape(3, 3)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid K matrix: {e}")
+    try:
+        dist_arr = np.array(dist, dtype=float)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid distortion array: {e}")
+
+    # For demo purposes; replace with your real R/T if needed
     R = np.eye(3)
     T = np.array([[1.0], [0.0], [0.0]])
 
     left_img = read_image_from_upload(left)
     right_img = read_image_from_upload(right)
 
-    rect_left, rect_right = rectificate_images(left_img, right_img, K, dist, R, T)
+    try:
+        rect_left, rect_right = rectificate_images(
+            left_img, right_img, K_mat, dist_arr, R, T
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Rectification failed: {e}")
 
     return {
         "left": encode_image_to_base64(rect_left),

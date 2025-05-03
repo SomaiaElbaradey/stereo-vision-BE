@@ -65,22 +65,16 @@ def encode_image_to_base64(img):
 async def rectify_images(
     left: UploadFile = File(...),
     right: UploadFile = File(...),
-    K: List[float] = Form(
-        ..., 
-        description="Intrinsic matrix as 9 floats in row-major order"
-    ),
-    dist: List[float] = Form(
-        ..., 
-        description="Distortion coefficients as a list of floats"
-    ),
+    K: str= Form(...),
+    dist: str = Form(...),
 ):
     # --- parse & validate calibration params ---
     try:
-        K_mat = np.array(K, dtype=float).reshape(3, 3)
+        K_mat = np.array(json.loads(K))
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid K matrix: {e}")
     try:
-        dist_arr = np.array(dist, dtype=float)
+        dist_arr = np.array(json.loads(dist))
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid distortion array: {e}")
 
